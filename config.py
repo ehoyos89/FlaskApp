@@ -2,7 +2,8 @@
 import os
 
 PHOTOS_BUCKET = os.environ['PHOTOS_BUCKET']
-FLASK_SECRET = os.environ.get('FLASK_SECRET_KEY')
+FLASK_SECRET = os.environ['FLASK_SECRET_KEY']
+DATABASE_PORT = 3306
 
 DATABASE_HOST = os.environ['DATABASE_HOST'] if 'DATABASE_HOST' in os.environ else None
 DATABASE_USER = os.environ['DATABASE_USER'] if 'DATABASE_USER' in os.environ else None

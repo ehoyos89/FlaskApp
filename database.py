@@ -74,5 +74,6 @@ def get_database_connection():
     conn = mysql.connector.connect(user=config.DATABASE_USER, password=config.DATABASE_PASSWORD,
                                    host=config.DATABASE_HOST,
                                    database=config.DATABASE_DB_NAME,
+                                   port=config.DATABASE_PORT,
                                    use_pure=True) # see https://bugs.mysql.com/90585
     return conn
