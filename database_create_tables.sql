@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS employees;
-use employees;
+CREATE DATABASE IF NOT EXISTS flaskdb;
+use flaskdb;
 
 CREATE TABLE IF NOT EXISTS employee (
   id int not null auto_increment primary key,
