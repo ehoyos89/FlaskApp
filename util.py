@@ -1,21 +1,22 @@
-"""Shared utility helper functions"""
+"""Funciones de utilidad compartidas"""
 import os
 from io import BytesIO
 from PIL import Image
 
-EXIF_ORIENTATION = 274  # Magic numbers from http://www.exiv2.org/tags.html
+# Números mágicos de http://www.exiv2.org/tags.html
+EXIF_ORIENTATION = 274
 
 def random_hex_bytes(n_bytes):
-    """Create a hex encoded string of random bytes"""
+    """Crea una cadena codificada en hexadecimal de bytes aleatorios."""
     return os.urandom(n_bytes).hex()
 
 def resize_image(file_p, size):
-    """Resize an image to fit within the size, and save to the path directory"""
+    """Redimensiona una imagen para que se ajuste al tamaño y la guarda en el directorio de la ruta."""
     dest_ratio = size[0] / float(size[1])
     try:
         image = Image.open(file_p)
     except IOError:
-        print("Error: Unable to open image")
+        print("Error: No se puede abrir la imagen")
         return None
 
     try:
@@ -27,12 +28,12 @@ def resize_image(file_p, size):
         elif exif[EXIF_ORIENTATION] == 8:
             image = image.rotate(90, expand=True)
     except:
-        print("No exif data")
+        print("No hay datos EXIF")
 
     source_ratio = image.size[0] / float(image.size[1])
 
-    # the image is smaller than the destination on both axis
-    # don't scale it
+    # La imagen es más pequeña que el destino en ambos ejes,
+    # no la escales.
     if image.size < size:
         new_width, new_height = image.size
     elif dest_ratio > source_ratio:

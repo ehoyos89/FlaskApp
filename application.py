@@ -1,4 +1,4 @@
-"Demo Flask application"
+"""Aplicación de demostración de Flask"""
 import json
 import os
 import subprocess
@@ -13,7 +13,9 @@ import boto3
 import config
 import util
 
+# Obtiene el documento de identidad de la instancia EC2.
 def get_instance_document():
+    """Obtiene el documento de identidad de la instancia EC2."""
     try:
         r = requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document")
         if r.status_code == 401:
@@ -35,59 +37,63 @@ def get_instance_document():
         return { "availabilityZone" : "us-fake-1a",  "instanceId" : "i-fakeabc" }
 
 
+# Importa el módulo de base de datos adecuado según el modo.
 if "DYNAMO_MODE" in os.environ:
     import database_dynamo as database
 else:
     import database
 
+# Inicializa la aplicación Flask.
 application = Flask(__name__)
 application.secret_key = config.FLASK_SECRET
 
+# Obtiene información de la instancia.
 doc = get_instance_document()
 availablity_zone = doc["availabilityZone"]
 instance_id = doc["instanceId"]
 
+# Define las insignias de los empleados.
 badges = {
-    "apple" : "Mac User",
-    "windows" : "Windows User",
-    "linux" : "Linux User",
-    "video-camera" : "Digital Content Star",
-    "trophy" : "Employee of the Month",
-    "camera" : "Photographer",
-    "plane" : "Frequent Flier",
-    "paperclip" : "Paperclip Afficionado",
-    "coffee" : "Coffee Snob",
-    "gamepad" : "Gamer",
-    "bug" : "Bugfixer",
-    "umbrella" : "Seattle Fan",
+    "apple" : "Usuario de Mac",
+    "windows" : "Usuario de Windows",
+    "linux" : "Usuario de Linux",
+    "video-camera" : "Estrella de Contenido Digital",
+    "trophy" : "Empleado del Mes",
+    "camera" : "Fotógrafo",
+    "plane" : "Viajero Frecuente",
+    "paperclip" : "Aficionado a los Clips",
+    "coffee" : "Experto en Café",
+    "gamepad" : "Jugador",
+    "bug" : "Solucionador de Errores",
+    "umbrella" : "Fan de Seattle",
 }
 
-### FlaskForm set up
+### Configuración de FlaskForm
 class EmployeeForm(FlaskForm):
-    """flask_wtf form class"""
+    """Clase de formulario flask_wtf"""
     employee_id = HiddenField()
     photo = FileField('image')
-    full_name = StringField(u'Full Name', [validators.InputRequired()])
-    location = StringField(u'Location', [validators.InputRequired()])
-    job_title = StringField(u'Job Title', [validators.InputRequired()])
-    badges = HiddenField(u'Badges')
+    full_name = StringField('Nombre Completo', [validators.InputRequired()])
+    location = StringField('Ubicación', [validators.InputRequired()])
+    job_title = StringField('Cargo', [validators.InputRequired()])
+    badges = HiddenField('Insignias')
 
 @application.before_request
 def before_request():
-    "Set up globals referenced in jinja templates"
+    """Configura las variables globales a las que se hace referencia en las plantillas de Jinja."""
     g.availablity_zone = availablity_zone
     g.instance_id = instance_id
 
 @application.route("/")
 def home():
-    "Home screen"
+    """Pantalla de inicio"""
     s3_client = boto3.client('s3')
     employees = database.list_employees()
     if employees == 0:
         return render_template_string("""        
         {% extends "main.html" %}
         {% block head %}
-        Flask Employee Directory - Home
+        Directorio de Empleados de Flask - Inicio
         <a class="btn btn-primary float-right" href="{{ url_for('add') }}">Agregar</a>
         {% endblock %}
         """)
@@ -105,11 +111,11 @@ def home():
     return render_template_string("""
         {% extends "main.html" %}
         {% block head %}
-        Employee Directory - Home
-        <a class="btn btn-primary float-right" href="{{ url_for('add') }}">Add</a>
+        Directorio de Empleados - Inicio
+        <a class="btn btn-primary float-right" href="{{ url_for('add') }}">Agregar</a>
         {% endblock %}
         {% block body %}
-            {%  if not employees %}<h4>Empty Directory</h4>{% endif %}
+            {%  if not employees %}<h4>Directorio Vacío</h4>{% endif %}
 
             <table class="table table-bordered">
               <tbody>
@@ -118,7 +124,7 @@ def home():
                   <td width="100">{% if employee.signed_url %}
                   <img width="50" src="{{employee.signed_url}}" /><br/>
                   {% endif %}
-                  <a href="{{ url_for('delete', employee_id=employee.id) }}"><span class="fa fa-remove" aria-hidden="true"></span> delete</a>
+                  <a href="{{ url_for('delete', employee_id=employee.id) }}"><span class="fa fa-remove" aria-hidden="true"></span> eliminar</a>
                   </td>
                   <td><a href="{{ url_for('view', employee_id=employee.id) }}">{{employee.full_name}}</a>
                   {% for badge in badges %}
@@ -140,13 +146,13 @@ def home():
 
 @application.route("/add")
 def add():
-    "Add an employee"
+    """Agrega un empleado."""
     form = EmployeeForm()
     return render_template("view-edit.html", form=form, badges=badges)
 
 @application.route("/edit/<employee_id>")
 def edit(employee_id):
-    "Edit an employee"
+    """Edita un empleado."""
     s3_client = boto3.client('s3')
     employee = database.load_employee(employee_id)
     signed_url = None
@@ -168,7 +174,7 @@ def edit(employee_id):
 
 @application.route("/save", methods=['POST'])
 def save():
-    "Save an employee"
+    """Guarda un empleado."""
     form = EmployeeForm()
     s3_client = boto3.client('s3')
     key = None
@@ -177,7 +183,7 @@ def save():
             image_bytes = util.resize_image(form.photo.data, (120, 160))
             if image_bytes:
                 try:
-                    # save the image to s3
+                    # Guarda la imagen en S3.
                     prefix = "employee_pic/"
                     key = prefix + util.random_hex_bytes(8) + '.png'
                     s3_client.put_object(
@@ -204,14 +210,14 @@ def save():
                 form.location.data,
                 form.job_title.data,
                 form.badges.data)
-        flash("Saved!")
+        flash("¡Guardado!")
         return redirect(url_for("home"))
     else:
-        return "Form failed validate"
+        return "El formulario no se pudo validar"
 
 @application.route("/employee/<employee_id>")
 def view(employee_id):
-    "View an employee"
+    """Muestra un empleado."""
     s3_client = boto3.client('s3')
     employee = database.load_employee(employee_id)
     if "object_key" in employee and employee["object_key"]:
@@ -228,8 +234,8 @@ def view(employee_id):
         {% extends "main.html" %}
         {% block head %}
             {{employee.full_name}}
-            <a class="btn btn-primary float-right" href="{{ url_for("edit", employee_id=employee.id) }}">Edit</a>
-            <a class="btn btn-primary float-right" href="{{ url_for('home') }}">Home</a>
+            <a class="btn btn-primary float-right" href="{{ url_for("edit", employee_id=employee.id) }}">Editar</a>
+            <a class="btn btn-primary float-right" href="{{ url_for('home') }}">Inicio</a>
         {% endblock %}
         {% block body %}
 
@@ -269,14 +275,14 @@ def view(employee_id):
 
 @application.route("/delete/<employee_id>")
 def delete(employee_id):
-    "delete employee route"
+    """Ruta para eliminar a un empleado."""
     database.delete_employee(employee_id)
-    flash("Deleted!")
+    flash("¡Eliminado!")
     return redirect(url_for("home"))
 
 @application.route("/info")
 def info():
-    "Webserver info route"
+    """Ruta de información del servidor web."""
     return render_template_string("""
             {% extends "main.html" %}
             {% block head %}
@@ -295,7 +301,7 @@ def info():
 
 @application.route("/info/stress_cpu/<seconds>")
 def stress(seconds):
-    "Max out the CPU"
+    """Maximiza el uso de la CPU."""
     flash("Aplicando stress al CPU")
     subprocess.Popen(["stress", "--cpu", "8", "--timeout", seconds])
     return redirect(url_for("info"))

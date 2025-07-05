@@ -1,9 +1,9 @@
-"Database layer - next time use SQLAlchemy"
+"""Capa de base de datos: la próxima vez, usa SQLAlchemy"""
 import mysql.connector
 import config
 
 def list_employees():
-    "Select all the employees from the database"
+    """Selecciona todos los empleados de la base de datos."""
     conn = get_database_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""SELECT id, object_key, full_name, location, job_title, badges
@@ -15,7 +15,7 @@ def list_employees():
     return result
 
 def load_employee(employee_id):
-    "Select one the employee from the database"
+    """Selecciona un empleado de la base de datos."""
     conn = get_database_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""SELECT id, object_key, full_name, location, job_title, badges
@@ -27,7 +27,7 @@ def load_employee(employee_id):
     return result
 
 def add_employee(object_key, full_name, location, job_title, badges):
-    "Add an employee to the database"
+    """Agrega un empleado a la base de datos."""
     conn = get_database_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""INSERT INTO employee (object_key, full_name, location, job_title, badges)
@@ -37,7 +37,7 @@ def add_employee(object_key, full_name, location, job_title, badges):
     conn.close()
 
 def update_employee(employee_id, object_key, full_name, location, job_title, badges):
-    "Update an employee to the database"
+    """Actualiza un empleado en la base de datos."""
     conn = get_database_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -49,7 +49,7 @@ def update_employee(employee_id, object_key, full_name, location, job_title, bad
             WHERE id = %s;
          """, (object_key, full_name, location, job_title, badges, employee_id))
     else:
-        # if no object key is supplied, don't update it
+        # Si no se proporciona una clave de objeto, no la actualices.
         cursor.execute("""
             UPDATE employee SET
             full_name=%s, location=%s, job_title=%s, badges=%s
@@ -61,7 +61,7 @@ def update_employee(employee_id, object_key, full_name, location, job_title, bad
     conn.close()
 
 def delete_employee(employee_id):
-    "Delete an employee."
+    """Elimina un empleado."""
     conn = get_database_connection()
     cursor = conn.cursor()
     cursor.execute("""DELETE FROM employee WHERE id = %(emp)s;""", {'emp': employee_id})
@@ -70,7 +70,7 @@ def delete_employee(employee_id):
     conn.close()
 
 def get_database_connection():
-    "Build a database connection"
+    """Crea una conexión a la base de datos."""
     conn = mysql.connector.connect(user=config.DATABASE_USER, password=config.DATABASE_PASSWORD,
                                    host=config.DATABASE_HOST,
                                    database=config.DATABASE_DB_NAME,

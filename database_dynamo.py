@@ -1,10 +1,10 @@
-"Database layer - the dynamo version"
+"""Capa de base de datos: la versión de DynamoDB"""
 import uuid
 
 import boto3
 
 def list_employees():
-    "Select all the employees from the database"
+    """Selecciona todos los empleados de la base de datos."""
     try:
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('Employees')
@@ -13,7 +13,7 @@ def list_employees():
         return 0
 
 def load_employee(employee_id):
-    "Select one the employee from the database"
+    """Selecciona un empleado de la base de datos."""
     try:
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('Employees')
@@ -27,7 +27,7 @@ def load_employee(employee_id):
         pass
 
 def add_employee(object_key, full_name, location, job_title, badges):
-    "Add an employee to the database"
+    """Agrega un empleado a la base de datos."""
     try:
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('Employees')
@@ -50,7 +50,7 @@ def add_employee(object_key, full_name, location, job_title, badges):
 
 
 def update_employee(employee_id, object_key, full_name, location, job_title, badges):
-    "Update an employee to the database"
+    """Actualiza un empleado en la base de datos."""
     try:
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('Employees')
@@ -76,7 +76,7 @@ def update_employee(employee_id, object_key, full_name, location, job_title, bad
         pass
 
 def delete_employee(employee_id):
-    "Delete an employee."
+    """Elimina un empleado."""
     try:
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table('Employees')
