@@ -1,0 +1,141 @@
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Archivos adicionales
+database_dynamo.py
+install_launch_dynamo.sh
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Control de versiones
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentación y README
+README.md
+*.md
+docs/
+documentation/
+
+# Archivos de configuración local
+.env.local
+.env.development
+.env.test
+config.local.py
+local_settings.py
+
+# Logs
+logs/
+*.log
+log/
+
+# Base de datos local
+*.db
+*.sqlite
+*.sqlite3
+database.db
+
+# Archivos de pruebas
+tests/
+test_*
+*_test.py
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Node.js (si usas frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Certificados y claves
+*.pem
+*.key
+*.crt
+*.cert
+
+# Archivos de respaldo
+*.orig
+*.backup
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# PyCharm
+.idea/
+
+# Entornos virtuales específicos
+myenv/
+flaskenv/
+
+# Archivos de migración locales (si usas Flask-Migrate)
+migrations/versions/*.pyc
+
+# Static files que se generan dinámicamente
+static/dist/
+static/build/
