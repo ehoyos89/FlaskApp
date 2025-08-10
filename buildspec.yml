@@ -1,0 +1,27 @@
+    1 version: 0.2
+    2 
+    3 phases:
+    4   pre_build:
+    5     commands:
+    6       - echo Logging in to Amazon ECR...
+    7       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS
+      --password-stdin $ECR_REPOSITORY_URI
+    8       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+    9   build:
+   10     commands:
+   11       - echo Build started on `date`
+   12       - echo Building the Docker image...
+   13       - docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG .
+   14       - docker tag $ECR_REPOSITORY_URI:$IMAGE_TAG $ECR_REPOSITORY_URI:latest
+   15   post_build:
+   16     commands:
+   17       - echo Build completed on `date`
+   18       - echo Pushing the Docker images...
+   19       - docker push $ECR_REPOSITORY_URI:$IMAGE_TAG
+   20       - docker push $ECR_REPOSITORY_URI:latest
+   21       - echo Writing image definitions file...
+   22       - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $ECR_REPOSITORY_URI:latest >
+      imagedefinitions.json
+   23 artifacts:
+   24   files:
+   25     - imagedefinitions.json

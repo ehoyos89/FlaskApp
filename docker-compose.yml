@@ -5,10 +5,29 @@ services:
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_DB_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
     ports:
       - "3306:3306"
+    networks:
+      - flask_network
     volumes:
       - ./database_create_tables.sql:/docker-entrypoint-initdb.d/database_create_tables.sql
+
+  flask_app:
+    build: .
+    container_name: flask_app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    env_file:
+      - .env
+    networks:
+      - flask_network
+  
+networks:
+  flask_network:
+    driver: bridge
