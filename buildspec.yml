@@ -10,7 +10,7 @@ phases:
       - echo "Listing current directory contents:"
       - ls -la
       - echo "Checking if Dockerfile exists:"
-      - test -f Dockerfile && echo "Dockerfile found" || echo "ERROR: Dockerfile NOT found"
+      - "test -f Dockerfile && echo \"Dockerfile found\" || echo \"ERROR: Dockerfile NOT found\""
   build:
     commands:
       - echo Build started on `date`
