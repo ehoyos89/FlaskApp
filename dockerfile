@@ -7,10 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 # Instala dependencias del sistema necesarias para compilar mysqlclient
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    pkg-config \
-    default-libmysqlclient-dev
+RUN apt-get update && apt-get install -y     build-essential
 
 # Establece el directorio de trabajo
 WORKDIR /app
