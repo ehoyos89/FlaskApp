@@ -1,17 +1,27 @@
 version: 0.2
-
 phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY_URI
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "IMAGE_TAG is $IMAGE_TAG"
+      - echo "ECR_REPOSITORY_URI is $ECR_REPOSITORY_URI"
+      # Verificar estructura del proyecto
+      - echo "Listing current directory contents:"
+      - ls -la
+      - echo "Checking if Dockerfile exists:"
+      - test -f Dockerfile && echo "Dockerfile found" || echo "ERROR: Dockerfile NOT found"
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG .
+      # Construir con logs más detallados
+      - docker build -t $ECR_REPOSITORY_URI:$IMAGE_TAG . --progress=plain
       - docker tag $ECR_REPOSITORY_URI:$IMAGE_TAG $ECR_REPOSITORY_URI:latest
+      # Verificar que las imágenes se crearon
+      - echo "Verifying images were created:"
+      - docker images
   post_build:
     commands:
       - echo Build completed on `date`
