@@ -1,6 +1,6 @@
 # Etapa 1: Build - Instala dependencias y compila paquetes
 # Usamos una imagen completa de Python para tener las herramientas de compilación
-FROM python:3.12 as builder
+FROM public.ecr.aws/docker/library/python:3.12 as builder
 
 # Variables de entorno para la compilación
 ENV PYTHONDONTWRITEBYTECODE=1 \

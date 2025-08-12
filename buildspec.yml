@@ -9,8 +9,8 @@ phases:
       - echo "ECR_REPOSITORY_URI is $ECR_REPOSITORY_URI"
       - echo "Listing current directory contents:"
       - ls -la
-      - echo "Checking if Dockerfile exists:"
-      - "test -f Dockerfile && echo \"Dockerfile found\" || echo \"ERROR: Dockerfile NOT found\""
+      - echo "Checking if dockerfile exists:"
+      - "test -f dockerfile && echo \"dockerfile found\" || echo \"ERROR: dockerfile NOT found\""
   build:
     commands:
       - echo Build started on `date`
