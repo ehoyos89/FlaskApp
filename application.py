@@ -111,7 +111,7 @@ def home():
     return render_template_string("""
         {% extends "main.html" %}
         {% block head %}
-        Directorio de Empleados - Index
+        Directorio de Empleados - Inicio
         <a class="btn btn-primary float-right" href="{{ url_for('add') }}">Agregar</a>
         {% endblock %}
         {% block body %}
