@@ -1,5 +1,5 @@
 # Etapa 1: Build - Instala dependencias y compila paquetes
-# Usamos una imagen completa de Python para tener las herramientas de compilación
+# Se utiliza una imagen completa de Python para tener las herramientas de compilación
 FROM public.ecr.aws/docker/library/python:3.12 as builder
 
 # Variables de entorno para la compilación
@@ -21,7 +21,7 @@ RUN /opt/venv/bin/pip install --no-cache-dir --upgrade pip && \
 # ---
 
 # Etapa 2: Final - Crea la imagen de producción final
-# Usamos una imagen slim de Python para reducir el tamaño
+# Se utiliza una imagen slim de Python para reducir el tamaño
 FROM python:3.12-slim
 
 # Información del mantenedor
